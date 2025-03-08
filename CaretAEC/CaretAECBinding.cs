@@ -12,7 +12,7 @@ namespace Caret.Windows.AudioEngine.AEC
 
         // DLL imports - make sure the DLL name matches your build output
         [DllImport("CaretAEC.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern bool CaretAEC_Initialize(int sampleRate, int channels);
+        private static extern bool CaretAEC_Initialize(int sampleRate, int channels, int defaultDelay = -5, int audioBufferDelay = -10);
 
         [DllImport("CaretAEC.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern void CaretAEC_Shutdown();
@@ -29,15 +29,17 @@ namespace Caret.Windows.AudioEngine.AEC
         /// </summary>
         /// <param name="sampleRate">Sample rate in Hz (e.g., 48000)</param>
         /// <param name="channels">Number of audio channels (e.g., 1 for mono, 2 for stereo)</param>
+        /// <param name="defaultDelay">Default delay for AEC configuration (default: -5)</param>
+        /// <param name="audioBufferDelay">Audio buffer delay used during processing (default: -10)</param>
         /// <returns>True if initialization was successful</returns>
-        public static bool Initialize(int sampleRate, int channels)
+        public static bool Initialize(int sampleRate, int channels, int defaultDelay = -5, int audioBufferDelay = -10)
         {
             if (_initialized)
             {
                 Shutdown();
             }
 
-            _initialized = CaretAEC_Initialize(sampleRate, channels);
+            _initialized = CaretAEC_Initialize(sampleRate, channels, defaultDelay, audioBufferDelay);
             return _initialized;
         }
 
